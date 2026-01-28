@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>小猫的秘密基地 🐾</title>
+  <style>
+    body{
+      margin:0;
+      font-family: "PingFang SC","Microsoft YaHei",system-ui;
+      background: linear-gradient(160deg,#ffd6e8,#e6dcff);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .card{
+      width:92%;
+      max-width:420px;
+      background:white;
+      border-radius:22px;
+      box-shadow:0 20px 40px rgba(0,0,0,.12);
+      padding:26px;
+      text-align:center;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:26px;
+    }
+
+    p{
+      color:#666;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    input{
+      width:100%;
+      padding:12px;
+      margin-top:12px;
+      border-radius:14px;
+      border:1px solid #ddd;
+      font-size:15px;
+    }
+
+    button{
+      width:100%;
+      margin-top:16px;
+      padding:12px;
+      border:none;
+      border-radius:16px;
+      background: linear-gradient(135deg,#ff7bbd,#9b7bff);
+      color:white;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .error{
+      color:#ff4d6d;
+      font-size:13px;
+      margin-top:10px;
+      display:none;
+    }
+
+    /* 主页面 */
+    .page{
+      display:none;
+      animation: fadeIn .6s ease;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(10px)}
+      to{opacity:1;transform:none}
+    }
+
+    .heart{
+      position:fixed;
+      width:14px;height:14px;
+      background:pink;
+      transform:rotate(45deg);
+      animation: float 1.2s forwards;
+    }
+    .heart:before,.heart:after{
+      content:"";
+      width:14px;height:14px;
+      background:pink;
+      border-radius:50%;
+      position:absolute;
+    }
+    .heart:before{left:-7px}
+    .heart:after{top:-7px}
+
+    @keyframes float{
+      to{opacity:0;transform:translateY(-80px) rotate(45deg)}
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 登录页 -->
+<div class="card" id="login">
+  <h1>🐱 小猫的秘密入口</h1>
+  <p>这里只允许主人进入<br>请输入正确的身份信息</p>
+
+  <input id="username" placeholder="username" />
+  <input id="password" type="password" placeholder="password" />
+
+  <button onclick="login()">进入</button>
+  <div class="error" id="error">不对哦，小猫不认识你 🐾</div>
+</div>
+
+<!-- 主页面 -->
+<div class="card page" id="main">
+  <h1>主人，小猫来啦 🐾</h1>
+  <p>
+    不在你身边的日子，小猫把想念都藏在这里。<br>
+    你打开的这一刻，我就已经蹭到你怀里了。
+  </p>
+
+  <p style="margin-top:18px;font-size:15px">
+    🗓 下次见面：<b>June</b><br><br>
+    小猫会乖乖等你，也会好好想你。
+  </p>
+
+  <button onclick="kiss()">点一下，小猫贴贴 💕</button>
+
+  <p style="margin-top:18px;color:#999;font-size:12px">
+    made by 小猫 · 只给主人
+  </p>
+</div>
+
+<script>
+  function login(){
+    const u = document.getElementById("username").value;
+    const p = document.getElementById("password").value;
+
+    if(u === "capibara" && p === "sexy"){
+      document.getElementById("login").style.display="none";
+      document.getElementById("main").style.display="block";
+    }else{
+      document.getElementById("error").style.display="block";
+    }
+  }
+
+  function kiss(){
+    for(let i=0;i<10;i++){
+      const h = document.createElement("div");
+      h.className="heart";
+      h.style.left = Math.random()*window.innerWidth+"px";
+      h.style.top = window.innerHeight-20+"px";
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),1200);
+    }
+  }
+</script>
+
+</body>
+</html>
