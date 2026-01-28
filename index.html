@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>小猫的秘密基地 🐾</title>
+
+  <style>
+    body{margin:0;font-family:"PingFang SC","Microsoft YaHei",system-ui;background:linear-gradient(160deg,#ffd6e8,#e6dcff);min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .card{width:92%;max-width:600px;background:#fff;border-radius:22px;box-shadow:0 20px 40px rgba(0,0,0,.12);padding:28px;text-align:center;animation:fadeIn .6s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    h1{margin:0 0 10px;font-size:28px}
+    p{color:#666;font-size:14px;line-height:1.6;margin:10px 0}
+    input,textarea{width:100%;padding:14px;margin-top:12px;border-radius:16px;border:1px solid #e6e6e6;font-size:15px;font-family:inherit;box-sizing:border-box;outline:none}
+    textarea{resize:none;min-height:96px}
+    button{width:100%;margin-top:16px;padding:14px;border:none;border-radius:18px;background:linear-gradient(135deg,#ff7bbd,#9b7bff);color:#fff;font-size:17px;font-weight:800;cursor:pointer}
+    .error{color:#ff4d6d;font-size:13px;margin-top:10px;display:none}
+    .page{display:none}
+
+    .topTag{display:inline-block;padding:8px 12px;border-radius:999px;background:#fff0f7;border:1px solid #ffd0e6;color:#8a5a7a;font-size:12px;font-weight:800}
+    .juneBox{margin-top:18px;background:#fff7fb;border:1px solid #ffd0e6;border-radius:20px;padding:16px}
+    .juneTitle{font-size:13px;color:#888;margin-bottom:6px}
+    .juneText{font-size:26px;font-weight:900;letter-spacing:1px;color:#5b3b50}
+
+    .countBox{margin-top:14px;background:#f9f6ff;border:1px solid #eadfff;border-radius:20px;padding:14px}
+    .countTitle{font-size:13px;color:#777;margin-bottom:10px}
+    .countGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .unit{background:#fff;border:1px solid #eee;border-radius:16px;padding:10px 6px}
+    .num{font-size:18px;font-weight:900;color:#3b2a52}
+    .lab{font-size:11px;color:#888;margin-top:4px}
+    .mini{font-size:12px;color:#888;margin-top:10px;text-align:center}
+
+    .msgBox{margin-top:18px;text-align:left;background:#f9f6ff;border:1px solid #eadfff;border-radius:18px;padding:14px}
+    .msgRowTitle{font-weight:900;color:#4a3b62}
+    .msgHint{font-size:12px;color:#777;margin-top:6px;line-height:1.5}
+    .bubble{margin-top:10px;background:#fff7fb;border:1px solid #ffd0e6;border-radius:16px;padding:12px;font-size:14px;color:#5b3b50;display:none;line-height:1.75}
+    .list{margin-top:12px;background:#fff;border:1px solid #eee;border-radius:16px;padding:12px}
+    .item{padding:10px 8px;border-bottom:1px dashed #eee}
+    .item:last-child{border-bottom:none}
+    .meta{font-size:12px;color:#999;margin-bottom:6px}
+    .txt{font-size:14px;color:#444;line-height:1.65;white-space:pre-wrap}
+
+    .heart{position:fixed;width:14px;height:14px;background:pink;transform:rotate(45deg);animation:float 1.2s forwards;pointer-events:none}
+    .heart:before,.heart:after{content:"";width:14px;height:14px;background:pink;border-radius:50%;position:absolute}
+    .heart:before{left:-7px}
+    .heart:after{top:-7px}
+    @keyframes float{to{opacity:0;transform:translateY(-90px) rotate(45deg)}}
+  </style>
+</head>
+
+<body>
+
+<div class="card" id="loginBox">
+  <div class="topTag">🐱 Only for 主人</div>
+  <h1 style="margin-top:12px;">小猫的秘密入口</h1>
+  <p>这里只允许主人进入</p>
+
+  <input id="usernameInput" placeholder="username" autocomplete="username" />
+  <input id="passwordInput" type="password" placeholder="password" autocomplete="current-password" />
+
+  <button id="enterBtn">进入</button>
+  <div class="error" id="errorText">不对哦，小猫不认识你 🐾</div>
+</div>
+
+<div class="card page" id="mainBox">
+  <div class="topTag">🐾 主人 × 小猫</div>
+  <h1 style="margin-top:12px;">主人，小猫来啦</h1>
+  <p>你打开页面的这一刻，小猫已经蹭到你怀里了。</p>
+
+  <div class="juneBox">
+    <div class="juneTitle">我们下次见面</div>
+    <div class="juneText">June</div>
+  </div>
+
+  <!-- 倒计时 -->
+  <div class="countBox">
+    <div class="countTitle" id="countTitle">🗓 距离见到主人还有</div>
+    <div class="countGrid">
+      <div class="unit"><div class="num" id="d">—</div><div class="lab">天</div></div>
+      <div class="unit"><div class="num" id="h">—</div><div class="lab">小时</div></div>
+      <div class="unit"><div class="num" id="m">—</div><div class="lab">分钟</div></div>
+      <div class="unit"><div class="num" id="s">—</div><div class="lab">秒</div></div>
+    </div>
+    <div class="mini" id="meetText"></div>
+  </div>
+
+  <button id="kissBtn">点一下，小猫贴贴 💕</button>
+
+  <div class="msgBox">
+    <div class="msgRowTitle">💬 云端留言板（你们两个都能看到）</div>
+    <div class="msgHint">主人写一句，小猫会自动回一句；你用任何设备打开都能看到。</div>
+
+    <textarea id="msgInput" placeholder="主人想对小猫说："></textarea>
+    <button id="saveMsgBtn">保存给主人 🐾</button>
+
+    <div class="bubble" id="catReplyBubble"></div>
+
+    <div style="margin-top:14px;font-weight:900;color:#4a3b62;">📜 最近的留言</div>
+    <div class="list" id="msgList">
+      <div class="mini">正在加载…</div>
+    </div>
+
+    <div class="mini">made by 小猫 · 只给主人</div>
+  </div>
+</div>
+
+<script>
+  // ====== 你要改的 3 个地方（从 Supabase 复制）======
+  const SUPABASE_URL = "https://pwmvttedpvejnatvesfq.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WNdifNp9Em9NLLkwGzcOag_vaS_DSjt";
+  const ROOM_CODE = "room_june"; // 必须和你 SQL 里 room_code 一致
+
+  // ====== 倒计时目标时间：从 2026/06/15 开始 ======
+  // 你可以改成具体见面的时刻，比如 2026-06-15T18:30:00
+  const MEET_AT = new Date("2026-06-15T20:00:00");
+
+  // 登录信息
+  const LOGIN = { u: "capibara", p: "sexy" };
+
+  // 小猫回话库
+  const CAT_REPLIES = [
+    "Wuv u，小猫已经把这句话抱紧了。",
+    "你一说话，小猫就更想你一点点。Wuv u!",
+    "Wuv u小猫记住了，会乖乖等到 June。",
+    "Wuv u,小猫在这边很听话。",
+    "Wuv u, Miss u!",
+    "你不在的时候，小猫就靠这句话过日子。Wuv u!"
+  ];
+
+  // DOM
+  const loginBox = document.getElementById("loginBox");
+  const mainBox  = document.getElementById("mainBox");
+  const usernameInput = document.getElementById("usernameInput");
+  const passwordInput = document.getElementById("passwordInput");
+  const errorText = document.getElementById("errorText");
+  const enterBtn = document.getElementById("enterBtn");
+  const kissBtn = document.getElementById("kissBtn");
+
+  const msgInput = document.getElementById("msgInput");
+  const saveMsgBtn = document.getElementById("saveMsgBtn");
+  const msgList = document.getElementById("msgList");
+  const catReplyBubble = document.getElementById("catReplyBubble");
+
+  const dEl = document.getElementById("d");
+  const hEl = document.getElementById("h");
+  const mEl = document.getElementById("m");
+  const sEl = document.getElementById("s");
+  const meetText = document.getElementById("meetText");
+  const countTitle = document.getElementById("countTitle");
+
+  function escapeHtml(s){
+    return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+            .replaceAll('"',"&quot;").replaceAll("'","&#39;");
+  }
+  const pad = (n) => String(n).padStart(2,"0");
+  function fmtMeet(dt){
+    return `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())} ${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+  }
+  function pickReply(){
+    return CAT_REPLIES[Math.floor(Math.random()*CAT_REPLIES.length)];
+  }
+  function fmtTime(iso){
+    try{
+      const d = new Date(iso);
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const day = String(d.getDate()).padStart(2,"0");
+      const hh = String(d.getHours()).padStart(2,"0");
+      const mm = String(d.getMinutes()).padStart(2,"0");
+      return `${y}-${m}-${day} ${hh}:${mm}`;
+    }catch{ return ""; }
+  }
+
+  // ===== Supabase REST helper =====
+  async function sbFetch(path, options={}){
+    const url = `${SUPABASE_URL}${path}`;
+    const headers = {
+      "apikey": SUPABASE_PUBLISHABLE_KEY,
+      "Authorization": "Bearer " + SUPABASE_PUBLISHABLE_KEY,
+      "Content-Type": "application/json",
+      ...options.headers
+    };
+    const res = await fetch(url, { ...options, headers });
+    if(!res.ok){
+      const txt = await res.text().catch(()=> "");
+      throw new Error(`Supabase error ${res.status}: ${txt}`);
+    }
+    return res;
+  }
+
+  // ===== 倒计时 =====
+  let timer = null;
+  function startCountdown(){
+    meetText.textContent = `目标时间：${fmtMeet(MEET_AT)}`;
+
+    function tick(){
+      const now = new Date();
+      let diff = MEET_AT - now;
+
+      if(diff <= 0){
+        diff = 0;
+        countTitle.textContent = "🎉 现在！小猫冲过去抱住主人！";
+      }else{
+        countTitle.textContent = "🗓 距离见到主人还有";
+      }
+
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor(diff / 3600000) % 24;
+      const mins = Math.floor(diff / 60000) % 60;
+      const secs = Math.floor(diff / 1000) % 60;
+
+      dEl.textContent = days;
+      hEl.textContent = pad(hours);
+      mEl.textContent = pad(mins);
+      sEl.textContent = pad(secs);
+    }
+
+    tick();
+    if(timer) clearInterval(timer);
+    timer = setInterval(tick, 1000);
+  }
+
+  // ===== 拉取留言（最新 20 条）=====
+  async function loadMessages(){
+    msgList.innerHTML = `<div class="mini">正在加载…</div>`;
+    const q = `/rest/v1/ldr_messages?select=sender,message,cat_reply,created_at&room_code=eq.${encodeURIComponent(ROOM_CODE)}&order=created_at.desc&limit=20`;
+    const res = await sbFetch(q, { method:"GET" });
+    const data = await res.json();
+
+    if(!data.length){
+      msgList.innerHTML = `<div class="mini">还没有留言。主人先写第一句吧 🐾</div>`;
+      return;
+    }
+
+    msgList.innerHTML = data.map(row => {
+      const meta = `${escapeHtml(row.sender)} · ${fmtTime(row.created_at)}`;
+      const msg = escapeHtml(row.message || "");
+      const reply = row.cat_reply
+        ? `<div style="margin-top:8px;color:#5b3b50;background:#fff7fb;border:1px solid #ffd0e6;padding:10px;border-radius:12px;">小猫回：<br>“${escapeHtml(row.cat_reply)}”</div>`
+        : "";
+      return `
+        <div class="item">
+          <div class="meta">${meta}</div>
+          <div class="txt">“${msg}”</div>
+          ${reply}
+        </div>
+      `;
+    }).join("");
+  }
+
+  // ===== 保存留言（写入云端）=====
+  async function saveMessage(){
+    const t = msgInput.value.trim();
+    if(!t) return;
+
+    const reply = pickReply();
+    catReplyBubble.style.display = "block";
+    catReplyBubble.innerHTML = `小猫回：<br>“${escapeHtml(reply)}”`;
+
+    const payload = [{
+      room_code: ROOM_CODE,
+      sender: "主人",
+      message: t,
+      cat_reply: reply
+    }];
+
+    await sbFetch(`/rest/v1/ldr_messages`, {
+      method:"POST",
+      body: JSON.stringify(payload),
+      headers: { "Prefer": "return=minimal" }
+    });
+
+    msgInput.value = "";
+    await loadMessages();
+  }
+
+  // ===== 登录 =====
+  function doLogin(){
+    if(usernameInput.value.trim() === LOGIN.u && passwordInput.value.trim() === LOGIN.p){
+      errorText.style.display = "none";
+      loginBox.style.display = "none";
+      mainBox.style.display = "block";
+      startCountdown();
+      loadMessages();
+    }else{
+      errorText.style.display = "block";
+    }
+  }
+
+  enterBtn.addEventListener("click", doLogin);
+  [usernameInput, passwordInput].forEach(el=>{
+    el.addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
+  });
+
+  // 贴贴心心
+  function kiss(){
+    for(let i=0;i<12;i++){
+      const h=document.createElement("div");
+      h.className="heart";
+      h.style.left=Math.random()*innerWidth+"px";
+      h.style.top=(innerHeight-30)+"px";
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),1200);
+    }
+  }
+  kissBtn.addEventListener("click", kiss);
+  saveMsgBtn.addEventListener("click", saveMessage);
+</script>
+
+</body>
+</html>
